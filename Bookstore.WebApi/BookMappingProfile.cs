@@ -10,6 +10,7 @@ namespace Bookstore.BLL.Service
         {
             CreateMap<Book, BookDTO>();
             CreateMap<UpdateBookDTO, Book>();
+            CreateMap<CreateBookDTO, Book>();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Bookstore.BLL.Interface
         Task<BookDTO> GetBookById(int id);
         Task<IEnumerable<BookDTO>> GetAllBooks();
         Task CreateBook(CreateBookDTO dto);
-        Task<bool> UpdateBook(int id, UpdateBookDTO dto);
-        Task<bool> DeleteBook(int id);
+        Task UpdateBook(int id, UpdateBookDTO dto);
+        Task DeleteBook(int id);
     }
 }

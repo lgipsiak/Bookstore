@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 namespace Bookstore.WebApi.Controllers
 {
     [Route("api/book")]
+    [ApiController]
     public class BookController : Controller
     {
         private readonly IBookService _bookService;
@@ -18,9 +19,6 @@ namespace Bookstore.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] CreateBookDTO dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             await _bookService.CreateBook(dto);
 
             return Ok();
@@ -30,9 +28,6 @@ namespace Bookstore.WebApi.Controllers
         public async Task<ActionResult> GetById(int id)
         {
             var book = await _bookService.GetBookById(id);
-
-            if (book is null)
-                return NotFound();
 
             return Ok(book);
         }
@@ -49,13 +44,7 @@ namespace Bookstore.WebApi.Controllers
         public async Task<ActionResult> Update([FromRoute] int id,
                                                [FromBody] UpdateBookDTO dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var isUpdated = await _bookService.UpdateBook(id, dto);
-
-            if (isUpdated == false)
-                return NotFound();
+            await _bookService.UpdateBook(id, dto);
 
             return Ok();
         }
@@ -63,12 +52,9 @@ namespace Bookstore.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
-            var isDeleted = await _bookService.DeleteBook(id);
+            await _bookService.DeleteBook(id);
 
-            if (isDeleted == false)
-                return NotFound();
-
-            return Ok();
+            return NoContent();
         }
     }
 }

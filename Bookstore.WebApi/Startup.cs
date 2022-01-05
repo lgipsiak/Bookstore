@@ -3,6 +3,7 @@ using Bookstore.BLL.Service;
 using Bookstore.DAL;
 using Bookstore.DAL.Interface;
 using Bookstore.DAL.Repository;
+using Bookstore.WebApi.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -29,9 +30,11 @@ namespace Bookstore.WebApi
             {
                 options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]);
             });
-            services.AddTransient<IBookService, BookService>();
-            services.AddTransient<IBookRepository, BookRepository>();
+            services.AddScoped<IBookService, BookService>();
+            services.AddScoped<IBookRepository, BookRepository>();
             services.AddAutoMapper(this.GetType().Assembly);
+            services.AddScoped<ErrorHandlingMiddleware>();
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,7 +45,16 @@ namespace Bookstore.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bookstore");
+            });
 
             app.UseRouting();
 
