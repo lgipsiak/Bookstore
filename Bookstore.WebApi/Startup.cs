@@ -34,6 +34,7 @@ namespace Bookstore.WebApi
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<ErrorHandlingMiddleware>();
+            services.AddScoped<RequestTimeMiddleware>();
             services.AddSwaggerGen();
         }
 
@@ -46,6 +47,8 @@ namespace Bookstore.WebApi
             }
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
+
+            app.UseMiddleware<RequestTimeMiddleware>();
 
             app.UseHttpsRedirection();
 
