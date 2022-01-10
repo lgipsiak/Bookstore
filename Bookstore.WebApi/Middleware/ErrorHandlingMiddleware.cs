@@ -23,6 +23,8 @@ namespace Bookstore.WebApi.Middleware
             }
             catch (NotFoundException e)
             {
+                _logger.LogError(e, e.Message);
+
                 context.Response.StatusCode = 404;
                 await context.Response.WriteAsync(e.Message);
             }

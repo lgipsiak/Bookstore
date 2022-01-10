@@ -26,15 +26,25 @@ namespace Bookstore.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
             services.AddDbContext<BookstoreDbContext>(options =>
             {
                 options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]);
             });
             services.AddScoped<IBookService, BookService>();
+
             services.AddScoped<IBookRepository, BookRepository>();
+
+            services.AddScoped<IAuthorService, AuthorService>();
+
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
+
             services.AddAutoMapper(this.GetType().Assembly);
+
             services.AddScoped<ErrorHandlingMiddleware>();
+
             services.AddScoped<RequestTimeMiddleware>();
+
             services.AddSwaggerGen();
         }
 

@@ -17,9 +17,9 @@ namespace Bookstore.BLL.Service
 
         public BookService(ILogger<IBookService> logger, IBookRepository bookRepository, IMapper mapper)
         {
+            _logger = logger;
             _bookRepository = bookRepository;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public async Task CreateBook(CreateBookDTO dto)
@@ -63,7 +63,7 @@ namespace Bookstore.BLL.Service
 
         public async Task DeleteBook(int id)
         {
-            _logger.LogError($"Book with Id: {id} DELETE action invoked.");
+            _logger.LogWarning($"Book with Id: {id} DELETE action invoked.");
 
             var book = await _bookRepository.GetByIdAsync(id);
 

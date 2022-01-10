@@ -5,21 +5,21 @@ using System.Threading.Tasks;
 
 namespace Bookstore.WebApi.Controllers
 {
-    [Route("api/book")]
+    [Route("api/author")]
     [ApiController]
-    public class BookController : Controller
+    public class AuthorController : ControllerBase
     {
-        private readonly IBookService _bookService;
+        private readonly IAuthorService _authorService;
 
-        public BookController(IBookService bookService)
+        public AuthorController(IAuthorService authorService)
         {
-            _bookService = bookService;
+            _authorService = authorService;
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody] CreateBookDTO dto)
+        public async Task<ActionResult> Create([FromBody] CreateAuthorDTO dto)
         {
-            await _bookService.CreateBook(dto);
+            await _authorService.CreateAuthor(dto);
 
             return Ok();
         }
@@ -27,24 +27,24 @@ namespace Bookstore.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetById(int id)
         {
-            var book = await _bookService.GetBookById(id);
+            var author = await _authorService.GetAuthorById(id);
 
-            return Ok(book);
+            return Ok(author);
         }
 
         [HttpGet]
         public async Task<ActionResult> GetAll()
         {
-            var books = await _bookService.GetAllBooks();
+            var authors = await _authorService.GetAllAuthors();
 
-            return Ok(books);
+            return Ok(authors);
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> Update([FromRoute] int id,
-                                               [FromBody] UpdateBookDTO dto)
+                                               [FromBody] UpdateAuthorDTO dto)
         {
-            await _bookService.UpdateBook(id, dto);
+            await _authorService.UpdateAuthor(id, dto);
 
             return Ok();
         }
@@ -52,7 +52,7 @@ namespace Bookstore.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
-            await _bookService.DeleteBook(id);
+            await _authorService.DeleteAuthor(id);
 
             return NoContent();
         }
