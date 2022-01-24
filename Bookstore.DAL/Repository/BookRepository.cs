@@ -28,7 +28,9 @@ namespace Bookstore.DAL.Repository
 
         public async Task<Book> GetByIdAsync(int id)
         {
-            return await _dbContext.Books.FirstOrDefaultAsync(i => i.Id == id);
+            return await _dbContext.Books.Include(x => x.Book_Author)
+                                         .ThenInclude(x => x.Author)
+                                         .FirstOrDefaultAsync(i => i.Id == id);
         }
 
         public async Task<IEnumerable<Book>> GetAllAsync()
