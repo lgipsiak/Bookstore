@@ -1,4 +1,6 @@
-﻿namespace Bookstore.Shared.DTO
+﻿using System.Collections.Generic;
+
+namespace Bookstore.Shared.DTO
 {
     public class AuthorDTO
     {
@@ -6,5 +8,6 @@
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Description { get; set; }
+        public List<BookDTO> BookDTOs { get; set; }
     }
 }

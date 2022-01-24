@@ -35,7 +35,24 @@ namespace Bookstore.BLL.Service
             if (author is null)
                 throw new NotFoundException("Author not found.");
 
-            return _mapper.Map<AuthorDTO>(author);
+            var bookDTOs = new List<BookDTO>();
+
+            foreach (var book in author.Book_Author)
+            {
+                var bookDTO = new BookDTO
+                {
+                    Id = book.Book.Id,
+                    Title = book.Book.Title,
+                    ReleaseDate = book.Book.ReleaseDate
+                };
+                bookDTOs.Add(bookDTO);
+            }
+
+            var authorDTO = _mapper.Map<AuthorDTO>(author);
+
+            authorDTO.BookDTOs = bookDTOs;
+
+            return authorDTO;
         }
 
         public async Task<IEnumerable<AuthorDTO>> GetAllAuthors()
@@ -51,8 +68,6 @@ namespace Bookstore.BLL.Service
 
             if (author is null)
                 throw new NotFoundException("Author not found.");
-
-            //TODO: Change mapping from manual to automatic.
 
             author.FirstName = dto.FirstName;
             author.LastName = dto.LastName;

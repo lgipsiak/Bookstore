@@ -24,7 +24,24 @@ namespace Bookstore.BLL.Service
 
         public async Task CreateBook(CreateBookDTO dto)
         {
-            var book = _mapper.Map<Book>(dto);
+            var book = new Book()
+            {
+                Title = dto.Title,
+                ReleaseDate = dto.ReleaseDate
+            };
+
+            var bookAuthors = new List<BookAuthor>();
+
+            foreach (var authorId in dto.AuthorIds)
+            {
+                var bookAuthor = new BookAuthor
+                {
+                    AuthorId = authorId,
+                    Book = book
+                };
+                bookAuthors.Add(bookAuthor);
+            }
+            book.Book_Author = bookAuthors;
 
             await _bookRepository.CreateAsync(book);
         }
@@ -33,7 +50,9 @@ namespace Bookstore.BLL.Service
         {
             var books = await _bookRepository.GetAllAsync();
 
-            return _mapper.Map<List<BookDTO>>(books);
+            var bookDTOs = _mapper.Map<List<BookDTO>>(books);
+
+            return bookDTOs;
         }
 
         public async Task<BookDTO> GetBookById(int id)
@@ -43,7 +62,25 @@ namespace Bookstore.BLL.Service
             if (book is null)
                 throw new NotFoundException("Book not found.");
 
-            return _mapper.Map<BookDTO>(book);
+            var authorDTOs = new List<AuthorDTO>();
+
+            foreach (var author in book.Book_Author)
+            {
+                var authorDTO = new AuthorDTO
+                {
+                    Id = author.Author.Id,
+                    FirstName = author.Author.FirstName,
+                    LastName = author.Author.LastName,
+                    Description = author.Author.Description
+                };
+                authorDTOs.Add(authorDTO);
+            }
+
+            var bookDTO = _mapper.Map<BookDTO>(book);
+
+            bookDTO.AuthorDTOs = authorDTOs;
+
+            return bookDTO;
         }
 
         public async Task UpdateBook(int id, UpdateBookDTO dto)
@@ -52,8 +89,6 @@ namespace Bookstore.BLL.Service
 
             if (book is null)
                 throw new NotFoundException("Book not found.");
-
-            //TODO: Change mapping from manual to automatic.
 
             book.Title = dto.Title;
             book.ReleaseDate = dto.ReleaseDate;
