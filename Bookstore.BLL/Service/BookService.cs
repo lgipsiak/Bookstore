@@ -5,6 +5,7 @@ using Bookstore.DAL.Interface;
 using Bookstore.Shared.DTO;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Bookstore.BLL.Service
@@ -46,16 +47,28 @@ namespace Bookstore.BLL.Service
             await _bookRepository.CreateAsync(book);
         }
 
-        public async Task<IEnumerable<BookDTO>> GetAllBooks()
+        public async Task<IEnumerable<BookAuthorDTO>> GetAllBooks()
         {
             var books = await _bookRepository.GetAllAsync();
 
-            var bookDTOs = _mapper.Map<List<BookDTO>>(books);
+            var bookDTOs = books.Select(book => new BookAuthorDTO
+            {
+                Id = book.Id,
+                Title = book.Title,
+                ReleaseDate = book.ReleaseDate,
+                AuthorDTOs = book.Book_Author.Select(author => new AuthorDTO
+                {
+                    Id = author.Author.Id,
+                    FirstName = author.Author.FirstName,
+                    LastName = author.Author.LastName,
+                    Description = author.Author.Description
+                }).ToList()
+            }).ToList();
 
             return bookDTOs;
         }
 
-        public async Task<BookDTO> GetBookById(int id)
+        public async Task<BookAuthorDTO> GetBookById(int id)
         {
             var book = await _bookRepository.GetByIdAsync(id);
 
@@ -76,9 +89,13 @@ namespace Bookstore.BLL.Service
                 authorDTOs.Add(authorDTO);
             }
 
-            var bookDTO = _mapper.Map<BookDTO>(book);
-
-            bookDTO.AuthorDTOs = authorDTOs;
+            var bookDTO = new BookAuthorDTO
+            {
+                Id = book.Id,
+                Title = book.Title,
+                ReleaseDate = book.ReleaseDate,
+                AuthorDTOs = authorDTOs
+            };
 
             return bookDTO;
         }

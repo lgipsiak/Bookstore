@@ -5,6 +5,7 @@ using Bookstore.DAL.Interface;
 using Bookstore.Shared.DTO;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Bookstore.BLL.Service
@@ -28,7 +29,7 @@ namespace Bookstore.BLL.Service
             await _authorRepository.CreateAsync(author);
         }
 
-        public async Task<AuthorDTO> GetAuthorById(int id)
+        public async Task<AuthorBookDTO> GetAuthorById(int id)
         {
             var author = await _authorRepository.GetByIdAsync(id);
 
@@ -48,18 +49,40 @@ namespace Bookstore.BLL.Service
                 bookDTOs.Add(bookDTO);
             }
 
-            var authorDTO = _mapper.Map<AuthorDTO>(author);
+            //var authorDTO = _mapper.Map<AuthorBookDTO>(author);
 
-            authorDTO.BookDTOs = bookDTOs;
+            var authorDTO = new AuthorBookDTO()
+            {
+                Id = author.Id,
+                FirstName = author.FirstName,
+                LastName = author.LastName,
+                Description = author.Description,
+                BookDTOs = bookDTOs
+            };
 
             return authorDTO;
         }
 
-        public async Task<IEnumerable<AuthorDTO>> GetAllAuthors()
+        public async Task<IEnumerable<AuthorBookDTO>> GetAllAuthors()
         {
             var authors = await _authorRepository.GetAllAsync();
 
-            return _mapper.Map<List<AuthorDTO>>(authors);
+            var authorDTOs = authors.Select(author => new AuthorBookDTO
+            {
+                Id = author.Id,
+                FirstName = author.FirstName,
+                LastName = author.LastName,
+                Description = author.Description,
+                BookDTOs = author.Book_Author.Select(book => new BookDTO
+                {
+                    Id = book.Book.Id,
+                    Title = book.Book.Title,
+                    ReleaseDate = book.Book.ReleaseDate
+
+                }).ToList()
+            }).ToList();
+
+            return authorDTOs;
         }
 
         public async Task UpdateAuthor(int id, UpdateAuthorDTO dto)

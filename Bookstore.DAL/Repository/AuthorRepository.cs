@@ -35,7 +35,9 @@ namespace Bookstore.DAL.Repository
 
         public async Task<IEnumerable<Author>> GetAllAsync()
         {
-            return await _dbContext.Authors.ToListAsync();
+            return await _dbContext.Authors.Include(x => x.Book_Author)
+                                           .ThenInclude(x => x.Book)
+                                           .ToListAsync();
         }
 
         public async Task DeleteAsync(Author author)

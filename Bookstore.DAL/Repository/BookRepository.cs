@@ -2,6 +2,7 @@
 using Bookstore.DAL.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Bookstore.DAL.Repository
@@ -28,14 +29,14 @@ namespace Bookstore.DAL.Repository
 
         public async Task<Book> GetByIdAsync(int id)
         {
-            return await _dbContext.Books.Include(x => x.Book_Author)
+            return await _dbContext.Books.Include(x => x.Book_Author.OrderBy(x => x.Author.LastName))
                                          .ThenInclude(x => x.Author)
                                          .FirstOrDefaultAsync(i => i.Id == id);
         }
 
         public async Task<IEnumerable<Book>> GetAllAsync()
         {
-            return await _dbContext.Books.Include(x => x.Book_Author)
+            return await _dbContext.Books.Include(x => x.Book_Author.OrderBy(x => x.Author.LastName))
                                          .ThenInclude(x => x.Author)
                                          .ToListAsync();
         }
