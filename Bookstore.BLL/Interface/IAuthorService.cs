@@ -7,8 +7,8 @@ namespace Bookstore.BLL.Interface
     public interface IAuthorService
     {
         Task CreateAuthor(CreateAuthorDTO dto);
-        Task<AuthorBookDTO> GetAuthorById(int id);
-        Task<IEnumerable<AuthorBookDTO>> GetAllAuthors();
+        Task<AuthorDTO> GetAuthorById(int id);
+        Task<IEnumerable<AuthorDTO>> GetAllAuthors();
         Task UpdateAuthor(int id, UpdateAuthorDTO dto);
         Task DeleteAuthor(int id);
     }

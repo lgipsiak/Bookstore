@@ -24,23 +24,30 @@ namespace Bookstore.BLL.Service
         }
         public async Task CreateAuthor(CreateAuthorDTO dto)
         {
-            var author = _mapper.Map<Author>(dto);
+            var author = new Author()
+            {
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Description = dto.Description
+            };
+
+            //var author = _mapper.Map<Author>(dto);
 
             await _authorRepository.CreateAsync(author);
         }
 
-        public async Task<AuthorBookDTO> GetAuthorById(int id)
+        public async Task<AuthorDTO> GetAuthorById(int id)
         {
             var author = await _authorRepository.GetByIdAsync(id);
 
             if (author is null)
                 throw new NotFoundException("Author not found.");
 
-            var bookDTOs = new List<BookDTO>();
+            var bookDTOs = new List<BookAuthorDTO>();
 
             foreach (var book in author.Book_Author)
             {
-                var bookDTO = new BookDTO
+                var bookDTO = new BookAuthorDTO
                 {
                     Id = book.Book.Id,
                     Title = book.Book.Title,
@@ -49,9 +56,8 @@ namespace Bookstore.BLL.Service
                 bookDTOs.Add(bookDTO);
             }
 
-            //var authorDTO = _mapper.Map<AuthorBookDTO>(author);
 
-            var authorDTO = new AuthorBookDTO()
+            var authorDTO = new AuthorDTO()
             {
                 Id = author.Id,
                 FirstName = author.FirstName,
@@ -63,17 +69,17 @@ namespace Bookstore.BLL.Service
             return authorDTO;
         }
 
-        public async Task<IEnumerable<AuthorBookDTO>> GetAllAuthors()
+        public async Task<IEnumerable<AuthorDTO>> GetAllAuthors()
         {
             var authors = await _authorRepository.GetAllAsync();
 
-            var authorDTOs = authors.Select(author => new AuthorBookDTO
+            var authorDTOs = authors.Select(author => new AuthorDTO
             {
                 Id = author.Id,
                 FirstName = author.FirstName,
                 LastName = author.LastName,
                 Description = author.Description,
-                BookDTOs = author.Book_Author.Select(book => new BookDTO
+                BookDTOs = author.Book_Author.Select(book => new BookAuthorDTO
                 {
                     Id = book.Book.Id,
                     Title = book.Book.Title,
@@ -92,9 +98,11 @@ namespace Bookstore.BLL.Service
             if (author is null)
                 throw new NotFoundException("Author not found.");
 
-            author.FirstName = dto.FirstName;
-            author.LastName = dto.LastName;
-            author.Description = dto.Description;
+            if (dto.FirstName is not null) author.FirstName = dto.FirstName;
+
+            if (dto.LastName is not null) author.LastName = dto.LastName;
+
+            if (dto.Description is not null) author.Description = dto.Description;
 
             await _authorRepository.SaveAsync();
         }

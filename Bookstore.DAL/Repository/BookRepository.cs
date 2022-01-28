@@ -29,14 +29,18 @@ namespace Bookstore.DAL.Repository
 
         public async Task<Book> GetByIdAsync(int id)
         {
-            return await _dbContext.Books.Include(x => x.Book_Author.OrderBy(x => x.Author.LastName))
+            return await _dbContext.Books.Include(x => x.Book_Tag)
+                                         .ThenInclude(x => x.Tag)
+                                         .Include(x => x.Book_Author.OrderBy(x => x.Author.LastName))
                                          .ThenInclude(x => x.Author)
                                          .FirstOrDefaultAsync(i => i.Id == id);
         }
 
         public async Task<IEnumerable<Book>> GetAllAsync()
         {
-            return await _dbContext.Books.Include(x => x.Book_Author.OrderBy(x => x.Author.LastName))
+            return await _dbContext.Books.Include(x => x.Book_Tag)
+                                         .ThenInclude(x => x.Tag)
+                                         .Include(x => x.Book_Author.OrderBy(x => x.Author.LastName))
                                          .ThenInclude(x => x.Author)
                                          .ToListAsync();
         }

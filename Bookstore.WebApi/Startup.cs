@@ -39,6 +39,10 @@ namespace Bookstore.WebApi
 
             services.AddScoped<IAuthorRepository, AuthorRepository>();
 
+            services.AddScoped<ITagService, TagService>();
+
+            services.AddScoped<ITagRepository, TagRepository>();
+
             services.AddAutoMapper(this.GetType().Assembly);
 
             services.AddScoped<ErrorHandlingMiddleware>();

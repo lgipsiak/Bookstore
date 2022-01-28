@@ -6,10 +6,10 @@ namespace Bookstore.DAL.Interface
 {
     public interface IBookRepository
     {
-        public Task SaveAsync();
-        public Task CreateAsync(Book book);
-        public Task<Book> GetByIdAsync(int id);
-        public Task<IEnumerable<Book>> GetAllAsync();
-        public Task DeleteAsync(Book book);
+        Task SaveAsync();
+        Task CreateAsync(Book book);
+        Task<Book> GetByIdAsync(int id);
+        Task<IEnumerable<Book>> GetAllAsync();
+        Task DeleteAsync(Book book);
     }
 }

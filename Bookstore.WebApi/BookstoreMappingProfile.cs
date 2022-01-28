@@ -8,13 +8,13 @@ namespace Bookstore.WebApi
     {
         public BookstoreMappingProfile()
         {
-            CreateMap<Author, AuthorDTO>();
+            CreateMap<Author, AuthorBookDTO>();
 
             CreateMap<CreateAuthorDTO, Author>();
 
             CreateMap<UpdateAuthorDTO, Author>();
 
-            CreateMap<Book, BookDTO>();
+            CreateMap<Book, BookAuthorDTO>();
 
             CreateMap<UpdateBookDTO, Book>();
 
