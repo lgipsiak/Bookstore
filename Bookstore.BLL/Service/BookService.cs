@@ -42,21 +42,40 @@ namespace Bookstore.BLL.Service
                 };
                 bookAuthors.Add(bookAuthor);
             }
+
+            var bookTags = new List<BookTag>();
+
+            foreach (var tagId in dto.TagIds)
+            {
+                var bookTag = new BookTag
+                {
+                    TagId = tagId,
+                    Book = book
+                };
+                bookTags.Add(bookTag);
+            }
+
             book.Book_Author = bookAuthors;
+
+            book.Book_Tag = bookTags;
 
             await _bookRepository.CreateAsync(book);
         }
 
-        public async Task<IEnumerable<BookAuthorDTO>> GetAllBooks()
+        public async Task<IEnumerable<BookDTO>> GetAllBooks()
         {
             var books = await _bookRepository.GetAllAsync();
 
-            var bookDTOs = books.Select(book => new BookAuthorDTO
+            var bookDTOs = books.Select(book => new BookDTO
             {
                 Id = book.Id,
                 Title = book.Title,
                 ReleaseDate = book.ReleaseDate,
-                AuthorDTOs = book.Book_Author.Select(author => new AuthorDTO
+                TagDTOs = book.Book_Tag.Select(tag => new TagDTO
+                {
+                    Message = tag.Tag.Message
+                }).ToList(),
+                AuthorDTOs = book.Book_Author.Select(author => new AuthorBookDTO
                 {
                     Id = author.Author.Id,
                     FirstName = author.Author.FirstName,
@@ -68,18 +87,18 @@ namespace Bookstore.BLL.Service
             return bookDTOs;
         }
 
-        public async Task<BookAuthorDTO> GetBookById(int id)
+        public async Task<BookDTO> GetBookById(int id)
         {
             var book = await _bookRepository.GetByIdAsync(id);
 
             if (book is null)
                 throw new NotFoundException("Book not found.");
 
-            var authorDTOs = new List<AuthorDTO>();
+            var authorDTOs = new List<AuthorBookDTO>();
 
             foreach (var author in book.Book_Author)
             {
-                var authorDTO = new AuthorDTO
+                var authorDTO = new AuthorBookDTO
                 {
                     Id = author.Author.Id,
                     FirstName = author.Author.FirstName,
@@ -89,12 +108,24 @@ namespace Bookstore.BLL.Service
                 authorDTOs.Add(authorDTO);
             }
 
-            var bookDTO = new BookAuthorDTO
+            var tagDTOs = new List<TagDTO>();
+
+            foreach (var tag in book.Book_Tag)
+            {
+                var tagDTO = new TagDTO
+                {
+                    Message = tag.Tag.Message
+                };
+                tagDTOs.Add(tagDTO);
+            }
+
+            var bookDTO = new BookDTO
             {
                 Id = book.Id,
                 Title = book.Title,
                 ReleaseDate = book.ReleaseDate,
-                AuthorDTOs = authorDTOs
+                AuthorDTOs = authorDTOs,
+                TagDTOs = tagDTOs
             };
 
             return bookDTO;
