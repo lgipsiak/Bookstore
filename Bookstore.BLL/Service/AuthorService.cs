@@ -43,27 +43,22 @@ namespace Bookstore.BLL.Service
             if (author is null)
                 throw new NotFoundException("Author not found.");
 
-            var bookDTOs = new List<BookAuthorDTO>();
-
-            foreach (var book in author.Book_Author)
-            {
-                var bookDTO = new BookAuthorDTO
-                {
-                    Id = book.Book.Id,
-                    Title = book.Book.Title,
-                    ReleaseDate = book.Book.ReleaseDate
-                };
-                bookDTOs.Add(bookDTO);
-            }
-
-
             var authorDTO = new AuthorDTO()
             {
                 Id = author.Id,
                 FirstName = author.FirstName,
                 LastName = author.LastName,
                 Description = author.Description,
-                BookDTOs = bookDTOs
+                BookDTOs = author.Book_Author.Select(book => new BookAuthorDTO()
+                {
+                    Id = book.Book.Id,
+                    Title = book.Book.Title,
+                    ReleaseDate = book.Book.ReleaseDate,
+                    TagDTOs = book.Book.Book_Tag.Select(tag => new TagDTO()
+                    {
+                        Message = tag.Tag.Message
+                    }).ToList()
+                }).ToList()
             };
 
             return authorDTO;
@@ -83,8 +78,11 @@ namespace Bookstore.BLL.Service
                 {
                     Id = book.Book.Id,
                     Title = book.Book.Title,
-                    ReleaseDate = book.Book.ReleaseDate
-
+                    ReleaseDate = book.Book.ReleaseDate,
+                    TagDTOs = book.Book.Book_Tag.Select(tag => new TagDTO()
+                    {
+                        Message = tag.Tag.Message
+                    }).ToList()
                 }).ToList()
             }).ToList();
 

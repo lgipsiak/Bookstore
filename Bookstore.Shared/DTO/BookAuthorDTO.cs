@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Bookstore.Shared.DTO
 {
@@ -7,5 +8,6 @@ namespace Bookstore.Shared.DTO
         public int Id { get; set; }
         public string Title { get; set; }
         public DateTime ReleaseDate { get; set; }
+        public List<TagDTO> TagDTOs { get; set; }
     }
 }

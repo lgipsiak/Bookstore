@@ -30,6 +30,8 @@ namespace Bookstore.DAL.Repository
         {
             return await _dbContext.Authors.Include(x => x.Book_Author)
                                            .ThenInclude(x => x.Book)
+                                           .ThenInclude(x => x.Book_Tag)
+                                           .ThenInclude(x => x.Tag)
                                            .FirstOrDefaultAsync(i => i.Id == id);
         }
 
@@ -37,6 +39,8 @@ namespace Bookstore.DAL.Repository
         {
             return await _dbContext.Authors.Include(x => x.Book_Author)
                                            .ThenInclude(x => x.Book)
+                                           .ThenInclude(x => x.Book_Tag)
+                                           .ThenInclude(x => x.Tag)
                                            .ToListAsync();
         }
 
