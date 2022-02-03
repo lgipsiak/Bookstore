@@ -16,6 +16,8 @@ namespace Bookstore.DAL
         public DbSet<Tag> Tags { get; set; }
         public DbSet<BookAuthor> BookAuthors { get; set; }
         public DbSet<BookTag> BookTags { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

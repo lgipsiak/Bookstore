@@ -10,7 +10,7 @@ namespace Bookstore.DAL.Entities
 
         [Required]
         public string Title { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
 
         public ICollection<BookAuthor> Book_Author { get; set; }
         public ICollection<BookTag> Book_Tag { get; set; }

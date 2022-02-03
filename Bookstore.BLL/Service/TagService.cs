@@ -12,7 +12,8 @@ namespace Bookstore.BLL.Service
         private readonly ILogger<ITagService> _logger;
         private readonly ITagRepository _tagRepository;
 
-        public TagService(ILogger<ITagService> logger, ITagRepository tagRepository)
+        public TagService(ILogger<ITagService> logger,
+                          ITagRepository tagRepository)
         {
             _logger = logger;
             _tagRepository = tagRepository;

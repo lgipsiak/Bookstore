@@ -16,7 +16,9 @@ namespace Bookstore.BLL.Service
         private readonly IBookRepository _bookRepository;
         private readonly IMapper _mapper;
 
-        public BookService(ILogger<IBookService> logger, IBookRepository bookRepository, IMapper mapper)
+        public BookService(ILogger<IBookService> logger,
+                           IBookRepository bookRepository,
+                           IMapper mapper)
         {
             _logger = logger;
             _bookRepository = bookRepository;
@@ -122,9 +124,11 @@ namespace Bookstore.BLL.Service
             if (book is null)
                 throw new NotFoundException("Book not found.");
 
-            if (dto.Title is not null) book.Title = dto.Title;
+            if (dto.Title is not null)
+                book.Title = dto.Title;
 
-            if (dto.ReleaseDate != System.DateTime.MinValue) book.ReleaseDate = dto.ReleaseDate;
+            if (dto.ReleaseDate is not null)
+                book.ReleaseDate = dto.ReleaseDate;
 
             if (dto.AuthorIds is not null)
             {

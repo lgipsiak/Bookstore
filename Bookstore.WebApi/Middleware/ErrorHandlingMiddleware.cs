@@ -21,12 +21,19 @@ namespace Bookstore.WebApi.Middleware
             {
                 await next.Invoke(context);
             }
-            catch (NotFoundException e)
+            catch (BadRequestException badRequestException)
             {
-                _logger.LogError(e, e.Message);
+                _logger.LogError(badRequestException, badRequestException.Message);
+
+                context.Response.StatusCode = 400;
+                await context.Response.WriteAsync(badRequestException.Message);
+            }
+            catch (NotFoundException notFoundException)
+            {
+                _logger.LogError(notFoundException, notFoundException.Message);
 
                 context.Response.StatusCode = 404;
-                await context.Response.WriteAsync(e.Message);
+                await context.Response.WriteAsync(notFoundException.Message);
             }
             catch (Exception e)
             {

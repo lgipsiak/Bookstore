@@ -9,10 +9,10 @@ namespace Bookstore.DAL.Entities
 
         [Required]
         public string FirstName { get; set; }
-
         [Required]
         public string LastName { get; set; }
         public string Description { get; set; }
+
         public ICollection<BookAuthor> Book_Author { get; set; }
     }
 }

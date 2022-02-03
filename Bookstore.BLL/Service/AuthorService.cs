@@ -16,7 +16,9 @@ namespace Bookstore.BLL.Service
         private readonly IMapper _mapper;
         private readonly IAuthorRepository _authorRepository;
 
-        public AuthorService(ILogger<IAuthorService> logger, IMapper mapper, IAuthorRepository authorRepository)
+        public AuthorService(ILogger<IAuthorService> logger,
+                             IMapper mapper,
+                             IAuthorRepository authorRepository)
         {
             _logger = logger;
             _mapper = mapper;
@@ -96,11 +98,14 @@ namespace Bookstore.BLL.Service
             if (author is null)
                 throw new NotFoundException("Author not found.");
 
-            if (dto.FirstName is not null) author.FirstName = dto.FirstName;
+            if (dto.FirstName is not null)
+                author.FirstName = dto.FirstName;
 
-            if (dto.LastName is not null) author.LastName = dto.LastName;
+            if (dto.LastName is not null)
+                author.LastName = dto.LastName;
 
-            if (dto.Description is not null) author.Description = dto.Description;
+            if (dto.Description is not null)
+                author.Description = dto.Description;
 
             await _authorRepository.SaveAsync();
         }
