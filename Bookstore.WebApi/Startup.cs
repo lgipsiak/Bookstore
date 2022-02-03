@@ -5,7 +5,11 @@ using Bookstore.DAL;
 using Bookstore.DAL.Entities;
 using Bookstore.DAL.Interface;
 using Bookstore.DAL.Repository;
+using Bookstore.Shared.DTO;
+using Bookstore.Shared.DTO.Validators;
 using Bookstore.WebApi.Middleware;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -53,7 +57,7 @@ namespace Bookstore.WebApi
                 };
             });
 
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation();
 
             services.AddDbContext<BookstoreDbContext>(options =>
             {
@@ -75,13 +79,19 @@ namespace Bookstore.WebApi
 
             services.AddScoped<IAccountRepository, AccountRepository>();
 
-            services.AddAutoMapper(this.GetType().Assembly);
-
             services.AddScoped<ErrorHandlingMiddleware>();
 
             services.AddScoped<RequestTimeMiddleware>();
 
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+            services.AddScoped<IValidator<RegisterUserDTO>, RegisterUserDTOValidator>();
+
+            services.AddScoped<IValidator<CreateAuthorDTO>, CreateAuthorDTOValidator>();
+
+            services.AddScoped<IValidator<CreateBookDTO>, CreateBookDTOValidator>();
+
+            services.AddScoped<IValidator<CreateTagDTO>, CreateTagDTOValidator>();
 
             services.AddSwaggerGen();
         }

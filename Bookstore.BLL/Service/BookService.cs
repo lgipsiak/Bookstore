@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Bookstore.BLL.Interface;
+﻿using Bookstore.BLL.Interface;
 using Bookstore.DAL.Entities;
 using Bookstore.DAL.Interface;
 using Bookstore.Shared.DTO;
@@ -14,15 +13,12 @@ namespace Bookstore.BLL.Service
     {
         private readonly ILogger _logger;
         private readonly IBookRepository _bookRepository;
-        private readonly IMapper _mapper;
 
         public BookService(ILogger<IBookService> logger,
-                           IBookRepository bookRepository,
-                           IMapper mapper)
+                           IBookRepository bookRepository)
         {
             _logger = logger;
             _bookRepository = bookRepository;
-            _mapper = mapper;
         }
 
         public async Task CreateBook(CreateBookDTO dto)
