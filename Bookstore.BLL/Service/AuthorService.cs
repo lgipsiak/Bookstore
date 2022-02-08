@@ -1,4 +1,5 @@
-﻿using Bookstore.BLL.Interface;
+﻿using Bookstore.BLL.Exceptions;
+using Bookstore.BLL.Interface;
 using Bookstore.DAL.Entities;
 using Bookstore.DAL.Interface;
 using Bookstore.Shared.DTO;
@@ -28,8 +29,6 @@ namespace Bookstore.BLL.Service
                 LastName = dto.LastName,
                 Description = dto.Description
             };
-
-            //var author = _mapper.Map<Author>(dto);
 
             await _authorRepository.CreateAsync(author);
         }

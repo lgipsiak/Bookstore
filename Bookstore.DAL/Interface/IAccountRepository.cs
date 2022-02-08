@@ -8,5 +8,6 @@ namespace Bookstore.DAL.Interface
         Task SaveAsync();
         Task RegisterAsync(User user);
         Task<User> GetUserByEmail(string email);
+        Task<User> GetUserById(int id);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Bookstore.BLL.Service;
+﻿using Bookstore.BLL.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
@@ -28,6 +28,13 @@ namespace Bookstore.WebApi.Middleware
                 context.Response.StatusCode = 400;
                 await context.Response.WriteAsync(badRequestException.Message);
             }
+            catch (ForbiddenException forbiddenException)
+            {
+                _logger.LogError(forbiddenException, forbiddenException.Message);
+
+                context.Response.StatusCode = 403;
+                await context.Response.WriteAsync(forbiddenException.Message);
+            }
             catch (NotFoundException notFoundException)
             {
                 _logger.LogError(notFoundException, notFoundException.Message);
@@ -35,9 +42,9 @@ namespace Bookstore.WebApi.Middleware
                 context.Response.StatusCode = 404;
                 await context.Response.WriteAsync(notFoundException.Message);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                _logger.LogError(e, e.Message);
+                _logger.LogError(exception, exception.Message);
 
                 context.Response.StatusCode = 500;
                 await context.Response.WriteAsync("Something went wrong.");

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Bookstore.BLL.Service
+namespace Bookstore.BLL.Exceptions
 {
     public class NotFoundException : Exception
     {

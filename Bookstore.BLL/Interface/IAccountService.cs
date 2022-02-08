@@ -7,5 +7,6 @@ namespace Bookstore.BLL.Interface
     {
         Task RegisterUser(RegisterUserDTO dto);
         Task<string> GenerateJwt(LoginDTO dto);
+        Task ChangePassword(int id, ChangePasswordDTO dto);
     }
 }

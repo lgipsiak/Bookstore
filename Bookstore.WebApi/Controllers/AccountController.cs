@@ -31,5 +31,14 @@ namespace Bookstore.WebApi.Controllers
 
             return Ok(token);
         }
+
+        [HttpPut("{id}/password")]
+        public async Task<ActionResult> ChangePassword([FromRoute] int id,
+                                                       [FromBody] ChangePasswordDTO dto)
+        {
+            await _accountService.ChangePassword(id, dto);
+
+            return Ok();
+        }
     }
 }

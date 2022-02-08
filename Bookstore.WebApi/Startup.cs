@@ -66,6 +66,8 @@ namespace Bookstore.WebApi
 
             services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
 
+            services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
+
             services.AddControllers().AddFluentValidation();
 
             services.AddDbContext<BookstoreDbContext>(options =>

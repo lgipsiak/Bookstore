@@ -1,11 +1,10 @@
-﻿using Bookstore.DAL;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace Bookstore.Shared.DTO.Validators
 {
     public class CreateAuthorDTOValidator : AbstractValidator<CreateAuthorDTO>
     {
-        public CreateAuthorDTOValidator(BookstoreDbContext dbContext)
+        public CreateAuthorDTOValidator()
         {
             RuleFor(x => x.FirstName).NotEmpty();
 

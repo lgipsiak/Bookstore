@@ -29,5 +29,11 @@ namespace Bookstore.DAL.Repository
             return await _dbContext.Users.Include(x => x.Role)
                                          .FirstOrDefaultAsync(x => x.Email == email);
         }
+
+        public async Task<User> GetUserById(int id)
+        {
+            return await _dbContext.Users.Include(x => x.Role)
+                                         .FirstOrDefaultAsync(x => x.Id == id);
+        }
     }
 }
