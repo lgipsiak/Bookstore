@@ -1,5 +1,6 @@
 ﻿using Bookstore.BLL.Interface;
 using Bookstore.Shared.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ namespace Bookstore.WebApi.Controllers
 {
     [Route("api/tag")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class TagController : Controller
     {
         private readonly ITagService _tagService;

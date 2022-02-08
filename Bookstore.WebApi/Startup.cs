@@ -1,4 +1,5 @@
 using Bookstore.BLL;
+using Bookstore.BLL.Authorization;
 using Bookstore.BLL.Interface;
 using Bookstore.BLL.Service;
 using Bookstore.DAL;
@@ -10,6 +11,7 @@ using Bookstore.Shared.DTO.Validators;
 using Bookstore.WebApi.Middleware;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -57,12 +59,22 @@ namespace Bookstore.WebApi
                 };
             });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AtLeast18", builder => builder.AddRequirements(new MinimumAgeRequirement(18)));
+            });
+
+            services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
+
             services.AddControllers().AddFluentValidation();
 
             services.AddDbContext<BookstoreDbContext>(options =>
             {
                 options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]);
             });
+
+            services.AddScoped<IUserContextService, UserContextService>();
+
             services.AddScoped<IBookService, BookService>();
 
             services.AddScoped<IBookRepository, BookRepository>();
@@ -92,6 +104,8 @@ namespace Bookstore.WebApi
             services.AddScoped<IValidator<CreateBookDTO>, CreateBookDTOValidator>();
 
             services.AddScoped<IValidator<CreateTagDTO>, CreateTagDTOValidator>();
+
+            services.AddHttpContextAccessor();
 
             services.AddSwaggerGen();
         }

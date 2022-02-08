@@ -1,5 +1,6 @@
 ﻿using Bookstore.BLL.Interface;
 using Bookstore.Shared.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ namespace Bookstore.WebApi.Controllers
 {
     [Route("api/author")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class AuthorController : ControllerBase
     {
         private readonly IAuthorService _authorService;
@@ -25,6 +27,7 @@ namespace Bookstore.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult> GetById(int id)
         {
             var author = await _authorService.GetAuthorById(id);
@@ -33,6 +36,7 @@ namespace Bookstore.WebApi.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult> GetAll()
         {
             var authors = await _authorService.GetAllAuthors();
