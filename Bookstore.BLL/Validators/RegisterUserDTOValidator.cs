@@ -1,8 +1,9 @@
 ﻿using Bookstore.DAL;
+using Bookstore.Shared.DTO;
 using FluentValidation;
 using System.Linq;
 
-namespace Bookstore.Shared.DTO.Validators
+namespace Bookstore.BLL.Validators
 {
     public class RegisterUserDTOValidator : AbstractValidator<RegisterUserDTO>
     {

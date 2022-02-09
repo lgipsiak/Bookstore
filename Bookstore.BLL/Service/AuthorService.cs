@@ -4,8 +4,10 @@ using Bookstore.DAL.Entities;
 using Bookstore.DAL.Interface;
 using Bookstore.Shared.DTO;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Bookstore.BLL.Service
@@ -61,11 +63,35 @@ namespace Bookstore.BLL.Service
             return authorDTO;
         }
 
-        public async Task<IEnumerable<AuthorDTO>> GetAllAuthors()
+        public async Task<PagedResult<AuthorDTO>> GetAllAuthors(AuthorQuery query)
         {
-            var authors = await _authorRepository.GetAllAsync();
+            var authors = await _authorRepository.GetAllAsync(query);
 
-            var authorDTOs = authors.Select(author => new AuthorDTO
+            if (!string.IsNullOrEmpty(query.SortBy))
+            {
+                var columnsSelector = new Dictionary<string, Expression<Func<Author, object>>>
+                {
+                    {nameof(Author.FirstName), x => x.FirstName },
+                    {nameof(Author.LastName), x => x.LastName }
+                };
+
+                var selectedColumn = columnsSelector[query.SortBy];
+
+                authors = query.SortDirection == SortDirection.Ascending
+                    ? authors.AsQueryable().OrderBy(selectedColumn)
+                    : authors.AsQueryable().OrderByDescending(selectedColumn);
+            }
+            else
+            {
+                authors = query.SortDirection == SortDirection.Ascending
+                    ? authors.AsQueryable().OrderBy(x => x.Id)
+                    : authors.AsQueryable().OrderByDescending(x => x.Id);
+            }
+
+            var filteredAuthors = authors.Skip(query.PageSize * (query.PageNumber - 1))
+                                         .Take(query.PageSize);
+
+            var authorDTOs = filteredAuthors.Select(author => new AuthorDTO
             {
                 Id = author.Id,
                 FirstName = author.FirstName,
@@ -83,7 +109,12 @@ namespace Bookstore.BLL.Service
                 }).ToList()
             }).ToList();
 
-            return authorDTOs;
+            var pagedResult = new PagedResult<AuthorDTO>(authorDTOs,
+                                              authors.Count(),
+                                              query.PageSize,
+                                              query.PageNumber);
+
+            return pagedResult;
         }
 
         public async Task UpdateAuthor(int id, UpdateAuthorDTO dto)

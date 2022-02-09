@@ -4,8 +4,10 @@ using Bookstore.DAL.Entities;
 using Bookstore.DAL.Interface;
 using Bookstore.Shared.DTO;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Bookstore.BLL.Service
@@ -61,11 +63,35 @@ namespace Bookstore.BLL.Service
             await _bookRepository.CreateAsync(book);
         }
 
-        public async Task<IEnumerable<BookDTO>> GetAllBooks()
+        public async Task<PagedResult<BookDTO>> GetAllBooks(BookQuery query)
         {
-            var books = await _bookRepository.GetAllAsync();
+            var books = await _bookRepository.GetAllAsync(query);
 
-            var bookDTOs = books.Select(book => new BookDTO
+            if (!string.IsNullOrEmpty(query.SortBy))
+            {
+                var columnsSelector = new Dictionary<string, Expression<Func<Book, object>>>
+                {
+                    {nameof(Book.Title), x => x.Title },
+                    {nameof(Book.ReleaseDate), x => x.ReleaseDate }
+                };
+
+                var selectedColumn = columnsSelector[query.SortBy];
+
+                books = query.SortDirection == SortDirection.Ascending
+                    ? books.AsQueryable().OrderBy(selectedColumn)
+                    : books.AsQueryable().OrderByDescending(selectedColumn);
+            }
+            else
+            {
+                books = query.SortDirection == SortDirection.Ascending
+                    ? books.AsQueryable().OrderBy(x => x.Id)
+                    : books.AsQueryable().OrderByDescending(x => x.Id);
+            }
+
+            var filteredBooks = books.Skip(query.PageSize * (query.PageNumber - 1))
+                                     .Take(query.PageSize);
+
+            var bookDTOs = filteredBooks.Select(book => new BookDTO
             {
                 Id = book.Id,
                 Title = book.Title,
@@ -83,7 +109,12 @@ namespace Bookstore.BLL.Service
                 }).ToList()
             }).ToList();
 
-            return bookDTOs;
+            var pagedResult = new PagedResult<BookDTO>(bookDTOs,
+                                                       books.Count(),
+                                                       query.PageSize,
+                                                       query.PageNumber);
+
+            return pagedResult;
         }
 
         public async Task<BookDTO> GetBookById(int id)

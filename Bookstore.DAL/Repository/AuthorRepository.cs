@@ -1,7 +1,9 @@
 ﻿using Bookstore.DAL.Entities;
 using Bookstore.DAL.Interface;
+using Bookstore.Shared.DTO;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Bookstore.DAL.Repository
@@ -35,13 +37,17 @@ namespace Bookstore.DAL.Repository
                                            .FirstOrDefaultAsync(i => i.Id == id);
         }
 
-        public async Task<IEnumerable<Author>> GetAllAsync()
+        public async Task<IEnumerable<Author>> GetAllAsync(AuthorQuery query)
         {
             return await _dbContext.Authors.Include(x => x.Book_Author)
                                            .ThenInclude(x => x.Book)
                                            .ThenInclude(x => x.Book_Tag)
                                            .ThenInclude(x => x.Tag)
+                                           .Where(x => query.SearchPhrase == null
+                                                       || (x.FirstName.ToLower().Contains(query.SearchPhrase.ToLower()))
+                                                       || (x.LastName.ToLower().Contains(query.SearchPhrase.ToLower())))
                                            .ToListAsync();
+
         }
 
         public async Task DeleteAsync(Author author)

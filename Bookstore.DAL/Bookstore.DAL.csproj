@@ -13,4 +13,8 @@
 	</PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Bookstore.Shared\Bookstore.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

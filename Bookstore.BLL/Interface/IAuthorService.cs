@@ -1,5 +1,4 @@
 ﻿using Bookstore.Shared.DTO;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Bookstore.BLL.Interface
@@ -8,7 +7,7 @@ namespace Bookstore.BLL.Interface
     {
         Task CreateAuthor(CreateAuthorDTO dto);
         Task<AuthorDTO> GetAuthorById(int id);
-        Task<IEnumerable<AuthorDTO>> GetAllAuthors();
+        Task<PagedResult<AuthorDTO>> GetAllAuthors(AuthorQuery query);
         Task UpdateAuthor(int id, UpdateAuthorDTO dto);
         Task DeleteAuthor(int id);
     }

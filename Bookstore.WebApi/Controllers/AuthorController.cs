@@ -37,9 +37,9 @@ namespace Bookstore.WebApi.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult> GetAll()
+        public async Task<ActionResult> GetAll([FromQuery] AuthorQuery query)
         {
-            var authors = await _authorService.GetAllAuthors();
+            var authors = await _authorService.GetAllAuthors(query);
 
             return Ok(authors);
         }

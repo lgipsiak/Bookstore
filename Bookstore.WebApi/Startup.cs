@@ -2,12 +2,12 @@ using Bookstore.BLL;
 using Bookstore.BLL.Authorization;
 using Bookstore.BLL.Interface;
 using Bookstore.BLL.Service;
+using Bookstore.BLL.Validators;
 using Bookstore.DAL;
 using Bookstore.DAL.Entities;
 using Bookstore.DAL.Interface;
 using Bookstore.DAL.Repository;
 using Bookstore.Shared.DTO;
-using Bookstore.Shared.DTO.Validators;
 using Bookstore.WebApi.Middleware;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -106,6 +106,10 @@ namespace Bookstore.WebApi
             services.AddScoped<IValidator<CreateBookDTO>, CreateBookDTOValidator>();
 
             services.AddScoped<IValidator<CreateTagDTO>, CreateTagDTOValidator>();
+
+            services.AddScoped<IValidator<BookQuery>, BookQueryValidator>();
+
+            services.AddScoped<IValidator<AuthorQuery>, AuthorQueryValidator>();
 
             services.AddHttpContextAccessor();
 

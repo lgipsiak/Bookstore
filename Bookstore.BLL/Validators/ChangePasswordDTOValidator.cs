@@ -1,6 +1,7 @@
-﻿using FluentValidation;
+﻿using Bookstore.Shared.DTO;
+using FluentValidation;
 
-namespace Bookstore.Shared.DTO.Validators
+namespace Bookstore.BLL.Validators
 {
     public class ChangePasswordDTOValidator : AbstractValidator<ChangePasswordDTO>
     {
